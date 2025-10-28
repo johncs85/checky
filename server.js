@@ -12,7 +12,7 @@ mongoose.connect(process.env.MONGODB_URI)
 mongoose.connection.on('connected', () => {
     console.log(`Connected to MongoDB ${mongoose.connection.name}`)
 })
-const Task = require('./models/task.js')
+const Checklist = require('./models/checklist.js')
 app.use(express.urlencoded({ extended: false }))
 app.use(methodOverride("_method"))
 app.use(morgan("dev"))
@@ -20,6 +20,10 @@ app.use(express.static(path.join(__dirname, "public")))
 
 // Routes
 
+// GET: route url
+app.get('/', (req, res) => {
+    res.render('checklists/index.ejs')
+})
 
 
  // Connect port
