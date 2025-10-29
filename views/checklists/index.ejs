@@ -1,24 +1,79 @@
-<%- include('../partials/nav.ejs')  %>
+<%- include('../partials/nav.ejs') %>
 
-<section>
-    <form action="/checklists" method="post">
-    <label for="title">Title: </label>
-    <input type="text" name="title" id="title" placeholder="Add Checklist">
-    
-    <label for="note">Note: </label>
-    <input type="textarea" name="note" id="note">
-    
-    <label for="completed">Completed</label>
-    <input type="checkbox" name="completed" id="completed">
-    
-    <button type="submit">Submit Checklist</button>
-</form>
-</section>
-<h1>All Checklists</h1>
-<ul>
-    <% checklists.forEach(checklist => { %>
-        <li> <span><%= checklist.completed ? "Completed" : "Incomplete" %></span> <a href="/checklists/<%= checklist._id %>"><%= checklist.title %></a> <%= checklist.note %></li>
+<div class="container py-5" style="max-width: 600px;">
+  <h1 class="text-center fw-bold mb-4">
+    Checky <span class="text-success">✔</span>
+  </h1>
+
+  <!-- Checklist Form -->
+  <form action="/checklists" method="POST" class="mb-4">
+    <div class="input-group mb-3">
+      <input
+        type="text"
+        name="title"
+        id="title"
+        class="form-control"
+        placeholder="Add Task"
+        required
+      />
+      <button class="btn btn-outline-primary" type="submit">+ Add</button>
+    </div>
+
+    <div class="form-floating">
+      <textarea
+        class="form-control"
+        name="note"
+        id="note"
+        placeholder="Add note for this checklist"
+        style="height: 100px"
+      ></textarea>
+      <label for="note">Add note for this checklist</label>
+    </div>
+  </form>
+
+ <!-- Checklists Section -->
+<div class="list-group shadow-sm">
+  <% if (checklists.length === 0) { %>
+    <p class="text-center text-muted py-3">No tasks yet — add one above!</p>
+  <% } else { %>
+
+    <% checklists.sort((a, b) => a.completed - b.completed).forEach(checklist => { %>
+
+      <div class="list-group-item d-flex justify-content-between align-items-start flex-wrap">
+        <div class="d-flex align-items-start">
+          <form action="/checklists/<%= checklist._id %>?_method=PUT" method="POST" class="me-3">
+            <input type="hidden" name="title" value="<%= checklist.title %>"/>
+            <input type="hidden" name="note" value="<%= checklist.note %>" />
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="completed"
+              onChange="this.form.submit()"
+              <%= checklist.completed ? 'checked' : '' %>
+            />
+          </form>
+
+          <div>
+            <h5 class="mb-1 fw-semibold <%= checklist.completed ? 'text-muted text-decoration-line-through' : '' %>">
+             <a href="/checklists/<%= checklist._id %>"><%= checklist.title %></a>
+            </h5>
+
+            <% if (checklist.note) { %>
+              <small class="text-muted d-block <%= checklist.completed ? 'text-decoration-line-through' : '' %>">
+                Notes: <%= checklist.note %>
+              </small>
+            <% } %>
+          </div>
+        </div>
+
+        <div>
+          <form action="/checklists/<%= checklist._id %>?_method=DELETE" method="POST" class="d-inline">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </div>
+      </div>
     <% }) %>
-</ul>
-</body>
-</html>
+  <% } %>
+</div>
+
+</div>
