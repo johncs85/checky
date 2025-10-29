@@ -21,8 +21,65 @@ app.use(express.static(path.join(__dirname, "public")))
 // Routes
 
 // GET: route url
-app.get('/', (req, res) => {
-    res.render('checklists/index.ejs')
+app.get('/', async (req, res) => {
+    const allChecklists = await Checklist.find()
+    res.render('checklists/index.ejs', { checklists: allChecklists })
+})
+
+//  GET: /checklists
+app.get('/checklists', async (req, res) => {
+    const allChecklists = await Checklist.find()
+    console.log("All Checklists: ", allChecklists)
+  if (!allChecklists) return res.send("No data found!")
+    res.render('checklists/index.ejs', { checklists: allChecklists })
+})
+
+// GET: /checklists/new
+app.get('/checklists/new', (req, res) => {
+    res.render('checklists/new.ejs')
+})
+
+// POST: /checklists
+app.post('/checklists', async (req, res) => {
+    if(req.body.completed === 'on') {
+        req.body.completed = true
+    } else {
+        req.body.completed = false
+    }
+
+    await Checklist.create(req.body)
+    res.redirect('/')
+})
+
+// GET: /checklists/:checklistId
+app.get('/checklists/:checklistId', async (req, res) => {
+    const foundChecklist = await Checklist.findById(req.params.checklistId)
+    console.log("found checklist: ", foundChecklist)
+    res.render('checklists/show.ejs', { checklist: foundChecklist})
+})
+
+// GET: /checklists/:checklistId/edit
+app.get('/checklists/:checklistId/edit', async (req, res) => {
+    const foundChecklist = await Checklist.findById(req.params.checklistId)
+    console.log('Editing Checklist: ', foundChecklist)
+    res.render('checklists/edit.ejs', { checklist: foundChecklist })
+})
+
+// PUT: /checklists/:checklistId
+app.put('/checklists/:checklistId', async (req, res) => {
+    if(req.body.completed === 'on') {
+        req.body.completed = true
+    } else {
+        req.body.completed = false
+    }
+    await Checklist.findByIdAndUpdate(req.params.checklistId, req.body)
+    res.redirect('/')
+})
+
+// DELETE: /checklists/:checklistId
+app.delete('/checklists/:checklistId', async (req, res) => {
+    await Checklist.findByIdAndDelete(req.params.checklistId)
+    res.redirect('/')
 })
 
 

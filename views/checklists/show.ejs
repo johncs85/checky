@@ -1,0 +1,15 @@
+<%- include('../partials/nav.ejs') %>
+<a href="/">&lAarr; Back home</a>
+
+    <h1>Checklist</h1>
+    <p><span><%= checklist.completed ? "Completed" : "Incomplete" %> </span><%= checklist.title %> <%= checklist.note %></p>
+
+    <div class="actions">
+        <a href="/checklists/<%= checklist._id %>/edit">Edit</a>
+        <form action="/checklists/<%= checklist._id %>?_method=DELETE" method="post">
+            <button type="submit">Delete <%= checklist.title %></button>
+        </form>
+    </div>
+    </body>
+
+    </html>

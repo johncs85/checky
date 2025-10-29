@@ -1,0 +1,16 @@
+<%- include('../partials/nav.ejs')  %>
+<h1>Create New Checklist</h1>
+<form action="/checklists" method="post">
+    <label for="title">Title: </label>
+    <input type="text" name="title" id="title" placeholder="Walk the dog">
+    
+    <label for="note">Note: </label>
+    <input type="textarea" name="note" id="note">
+    
+    <label for="completed">Completed</label>
+    <input type="checkbox" name="completed" id="completed">
+    
+    <button type="submit">Submit Checklist</button>
+</form>
+</body>
+</html>
